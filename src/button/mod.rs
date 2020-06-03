@@ -1,22 +1,8 @@
 use crate::prelude::*;
-use yew::{html::Children, prelude::*};
+use yew::prelude::*;
 
 pub struct ButtonGroup {
     props: Props,
-}
-
-#[derive(Properties, Clone, PartialEq)]
-pub struct Props {
-    #[prop_or_default]
-    pub class: String,
-    #[prop_or_default]
-    pub style: String,
-    #[prop_or_default]
-    pub role: String,
-    #[prop_or_default]
-    pub aria_label: String,
-    #[prop_or_default]
-    pub children: Children,
 }
 
 impl Component for ButtonGroup {
@@ -38,7 +24,7 @@ impl Component for ButtonGroup {
     fn view(&self) -> Html {
         html! {
             <div class=self.class()
-                style=self.style()
+                style=self.props.style.clone()
                 role=self.props.role.clone()
                 aria-label=self.props.aria_label.clone()
             >
@@ -54,14 +40,6 @@ impl ButtonGroup {
             "btn-grp".into()
         } else {
             format!("btn-group {}", self.props.class)
-        }
-    }
-
-    fn style(&self) -> &str {
-        if self.props.style.is_empty() {
-            ""
-        } else {
-            &self.props.style
         }
     }
 }

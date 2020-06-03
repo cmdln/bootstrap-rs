@@ -1,18 +1,8 @@
 use crate::prelude::*;
-use yew::{html::Children, prelude::*};
+use yew::prelude::*;
 
 pub struct CardBody {
     props: Props,
-}
-
-#[derive(Properties, Clone, PartialEq)]
-pub struct Props {
-    #[prop_or_default]
-    pub class: String,
-    #[prop_or_default]
-    pub style: String,
-    #[prop_or_default]
-    pub children: Children,
 }
 
 impl Component for CardBody {
@@ -32,28 +22,11 @@ impl Component for CardBody {
     }
 
     fn view(&self) -> Html {
+        let class = calculate_classes("card-body", (&self.props).into());
         html! {
-            <div class=self.class() style=self.style()>
+            <div class=class style=self.props.style.clone()>
                 { self.props.children.render() }
             </div>
-        }
-    }
-}
-
-impl CardBody {
-    fn class(&self) -> String {
-        if self.props.class.is_empty() {
-            "card-body".into()
-        } else {
-            format!("card-body {}", self.props.class)
-        }
-    }
-
-    fn style(&self) -> &str {
-        if self.props.style.is_empty() {
-            ""
-        } else {
-            &self.props.style
         }
     }
 }

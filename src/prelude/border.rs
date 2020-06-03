@@ -1,20 +1,13 @@
+use super::{Color, Edge};
 #[derive(Clone, PartialEq)]
-pub enum Border {
-    All,
-    Top,
-    Right,
-    Bottom,
-    Left,
-}
+pub struct Border(pub Edge, pub Color);
 
 impl super::BootstrapClass for Border {
     fn as_classname(&self) -> String {
-        match self {
-            Self::All => "border".into(),
-            Self::Top => "border-top".into(),
-            Self::Right => "border-right".into(),
-            Self::Bottom => "border-bottom".into(),
-            Self::Left => "border-left".into(),
-        }
+        let edge = match self.0 {
+            Edge::All => "border".to_owned(),
+            _ => self.0.with_prefix("border"),
+        };
+        format!("{} {}", edge, self.1.with_prefix("border"))
     }
 }

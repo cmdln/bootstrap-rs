@@ -1,20 +1,8 @@
 use crate::prelude::*;
-use yew::{html::Children, prelude::*};
+use yew::prelude::*;
 
 pub struct Jumbotron {
     props: Props,
-}
-
-#[derive(Properties, Clone)]
-pub struct Props {
-    #[prop_or_default]
-    pub margin: Option<Margin>,
-    #[prop_or_default]
-    pub margins: Vec<Margin>,
-    #[prop_or_default]
-    pub class: String,
-    #[prop_or_default]
-    pub children: Children,
 }
 
 impl Component for Jumbotron {
@@ -34,8 +22,9 @@ impl Component for Jumbotron {
     }
 
     fn view(&self) -> Html {
+        let class = calculate_classes("jumbotron", (&self.props).into());
         html! {
-            <div class=format!("jumbotron {}", self.props.class)>
+            <div class=class>
                 { self.props.children.render() }
             </div>
         }

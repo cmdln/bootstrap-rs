@@ -33,12 +33,28 @@ pub struct Props {
     pub name: String,
     #[prop_or_default]
     pub id: String,
-    pub on_signal: Callback<String>,
+    pub on_change: Callback<String>,
     pub input_type: InputType,
     #[prop_or_default]
     pub readonly: bool,
     #[prop_or_default]
     pub value: String,
+    #[prop_or_default]
+    pub border: Option<Border>,
+    #[prop_or_default]
+    pub borders: Vec<Border>,
+    #[prop_or_default]
+    pub margin: Option<Margin>,
+    #[prop_or_default]
+    pub margins: Vec<Margin>,
+    #[prop_or_default]
+    pub padding: Option<Padding>,
+    #[prop_or_default]
+    pub paddings: Vec<Padding>,
+    #[prop_or_default]
+    pub class: String,
+    #[prop_or_default]
+    pub style: String,
 }
 
 impl Component for Input {
@@ -53,7 +69,7 @@ impl Component for Input {
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         if let InputChange(ChangeData::Value(value)) = msg {
             self.state = value.clone();
-            self.props.on_signal.emit(value);
+            self.props.on_change.emit(value);
             true
         } else {
             false
@@ -69,9 +85,9 @@ impl Component for Input {
 
     fn view(&self) -> Html {
         let class = if self.props.readonly {
-            "form-control-plaintext pl-3"
+            calculate_classes("form-control-plaintext", (&self.props).into())
         } else {
-            "form-control"
+            calculate_classes("form-control", (&self.props).into())
         };
         html! {
             <input
@@ -83,6 +99,21 @@ impl Component for Input {
                 readonly=self.props.readonly
                 onchange=self.link.callback(|evt| InputChange(evt))
             />
+        }
+    }
+}
+
+impl<'a> From<&'a Props> for BootstrapProps<'a> {
+    fn from(props: &Props) -> BootstrapProps {
+        let class = &props.class;
+        let borders = collect_bs(&props.border, &props.borders);
+        let margins = collect_bs(&props.margin, &props.margins);
+        let paddings = collect_bs(&props.padding, &props.paddings);
+        BootstrapProps {
+            class,
+            borders,
+            margins,
+            paddings,
         }
     }
 }

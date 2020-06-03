@@ -1,14 +1,8 @@
 use crate::prelude::*;
-use yew::{html::Children, prelude::*};
+use yew::prelude::*;
 
 pub struct Container {
     props: Props,
-}
-
-#[derive(Properties, Clone, PartialEq)]
-pub struct Props {
-    #[prop_or_default]
-    pub children: Children,
 }
 
 impl Component for Container {
@@ -29,9 +23,31 @@ impl Component for Container {
 
     fn view(&self) -> Html {
         html! {
-            <div class="container">
+            <div class=calculate_classes("container", (&self.props).into())>
                 { self.props.children.render() }
             </div>
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test() {
+        let container = Container {
+            props: Props {
+                margin: Some(Margin(Edge::All, 3)),
+                padding: Some(Padding(Edge::Top, 3)),
+                ..Props::default()
+            },
+        };
+        let expected = html! {
+            <div class="container m-3 pt-3">
+                <></>
+            </div>
+        };
+        assert_eq!(expected, container.view());
     }
 }
