@@ -33,6 +33,8 @@ pub struct Props {
     pub class: String,
     #[prop_or_default]
     pub style: String,
+    #[prop_or_default]
+    pub value: String,
 }
 
 impl Component for TextArea {
@@ -40,7 +42,7 @@ impl Component for TextArea {
     type Properties = Props;
 
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let state = String::default();
+        let state = props.value.clone();
         Self { props, state, link }
     }
 
@@ -55,7 +57,11 @@ impl Component for TextArea {
     }
 
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
-        render_on_change(&mut self.props, props)
+        let should_render = render_on_change(&mut self.props, props);
+        if should_render {
+            self.state = self.props.value.clone();
+        }
+        should_render
     }
 
     fn view(&self) -> Html {
