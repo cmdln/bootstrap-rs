@@ -37,7 +37,7 @@ impl Component for ButtonGroup {
 impl ButtonGroup {
     fn class(&self) -> String {
         if self.props.class.is_empty() {
-            "btn-grp".into()
+            "btn-group".into()
         } else {
             format!("btn-group {}", self.props.class)
         }
