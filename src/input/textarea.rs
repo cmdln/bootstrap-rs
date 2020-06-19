@@ -35,6 +35,8 @@ pub struct Props {
     pub style: String,
     #[prop_or_default]
     pub value: String,
+    #[prop_or_default]
+    pub valid: Option<bool>,
 }
 
 impl Component for TextArea {
@@ -65,11 +67,12 @@ impl Component for TextArea {
     }
 
     fn view(&self) -> Html {
+        let prefix = format!("form-control{}", valid_as_class(&self.props.valid));
         html! {
             <textarea
                 name=&self.props.name
                 id=&self.props.id
-                class=calculate_classes("form-control", (&self.props).into())
+                class=calculate_classes(prefix, (&self.props).into())
                 onchange=self.link.callback(|evt| InputChange(evt))
             >
                 { &self.state }

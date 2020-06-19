@@ -124,6 +124,14 @@ pub fn render_on_change<P: Properties + PartialEq>(
     }
 }
 
+pub fn valid_as_class(v: &Option<bool>) -> &'static str {
+    match v {
+        None => "",
+        Some(true) => " is-valid",
+        Some(false) => " is-invalid",
+    }
+}
+
 pub fn collect_bs<'a, T>(t: &'a Option<T>, ts: &'a [T]) -> Vec<&'a T> {
     if let Some(t) = t.as_ref() {
         let mut r = vec![t];

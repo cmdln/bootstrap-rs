@@ -55,6 +55,8 @@ pub struct Props {
     pub class: String,
     #[prop_or_default]
     pub style: String,
+    #[prop_or_default]
+    pub valid: Option<bool>,
 }
 
 impl Component for Input {
@@ -84,11 +86,15 @@ impl Component for Input {
     }
 
     fn view(&self) -> Html {
-        let class = if self.props.readonly {
-            calculate_classes("form-control-plaintext", (&self.props).into())
+        let prefix = if self.props.readonly {
+            format!(
+                "form-control-plaintext{}",
+                valid_as_class(&self.props.valid)
+            )
         } else {
-            calculate_classes("form-control", (&self.props).into())
+            format!("form-control{}", valid_as_class(&self.props.valid))
         };
+        let class = calculate_classes(prefix, (&self.props).into());
         html! {
             <input
                 name=&self.props.name
