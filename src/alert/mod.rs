@@ -54,7 +54,7 @@ impl Component for Alert {
     }
 
     fn view(&self) -> Html {
-        let color_class = self.props.color.with_prefix("alert-");
+        let color_class = self.props.color.with_prefix("alert");
         let class = calculate_classes(format!("alert {}", color_class), (&self.props).into());
         html! {
             <div class=class>
