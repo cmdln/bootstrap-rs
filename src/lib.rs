@@ -1,3 +1,4 @@
+pub mod alert;
 mod breadcrumb;
 mod button;
 mod card;
@@ -8,6 +9,7 @@ mod jumbotron;
 pub mod prelude;
 
 pub use self::{
+    alert::Alert,
     breadcrumb::{Breadcrumb, BreadcrumbItem},
     button::ButtonGroup,
     card::{Card, CardBody, CardHeader, CardText},
