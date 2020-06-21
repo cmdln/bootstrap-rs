@@ -1,5 +1,6 @@
-use crate::prelude::*;
-use yew::prelude::*;
+use super::props::Props;
+use crate::{prelude::*, render};
+use yew::{prelude::*, virtual_dom::VNode};
 
 pub struct TextArea {
     link: ComponentLink<Self>,
@@ -10,41 +11,21 @@ pub struct TextArea {
 #[derive(Debug)]
 pub struct InputChange(ChangeData);
 
-#[derive(Properties, Clone, PartialEq)]
-pub struct Props {
-    #[prop_or_default]
-    pub name: String,
-    #[prop_or_default]
-    pub id: String,
-    pub on_change: Callback<String>,
-    #[prop_or_default]
-    pub border: Option<Border>,
-    #[prop_or_default]
-    pub borders: Vec<Border>,
-    #[prop_or_default]
-    pub margin: Option<Margin>,
-    #[prop_or_default]
-    pub margins: Vec<Margin>,
-    #[prop_or_default]
-    pub padding: Option<Padding>,
-    #[prop_or_default]
-    pub paddings: Vec<Padding>,
-    #[prop_or_default]
-    pub class: String,
-    #[prop_or_default]
-    pub style: String,
-    #[prop_or_default]
-    pub value: String,
-    #[prop_or_default]
-    pub valid: Option<bool>,
-}
-
 impl Component for TextArea {
     type Message = InputChange;
     type Properties = Props;
 
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let state = props.value.clone();
+        let state = if props.children.is_empty() {
+            props.value.clone()
+        } else {
+            let node = props.children.render();
+            if let VNode::VText(text) = node {
+                text.text
+            } else {
+                props.value.clone()
+            }
+        };
         Self { props, state, link }
     }
 
@@ -67,31 +48,14 @@ impl Component for TextArea {
     }
 
     fn view(&self) -> Html {
-        let prefix = format!("form-control{}", valid_as_class(&self.props.valid));
-        html! {
+        let prefix = vec!["form-control", &valid_as_class(&self.props.valid)];
+        let html = html! {
             <textarea
-                name=&self.props.name
-                id=&self.props.id
-                class=calculate_classes(prefix, (&self.props).into())
                 onchange=self.link.callback(|evt| InputChange(evt))
             >
                 { &self.state }
             </textarea>
-        }
-    }
-}
-
-impl<'a> From<&'a Props> for BootstrapProps<'a> {
-    fn from(props: &Props) -> BootstrapProps {
-        let class = &props.class;
-        let borders = collect_bs(&props.border, &props.borders);
-        let margins = collect_bs(&props.margin, &props.margins);
-        let paddings = collect_bs(&props.padding, &props.paddings);
-        BootstrapProps {
-            class,
-            borders,
-            margins,
-            paddings,
-        }
+        };
+        render::render_with_prefix(&self.props, prefix, html)
     }
 }

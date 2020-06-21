@@ -1,18 +1,8 @@
-use crate::prelude::*;
-use yew::{html::Children, prelude::*};
+use crate::{prelude::*, props::*, render};
+use yew::prelude::*;
 
 pub struct CardText {
     props: Props,
-}
-
-#[derive(Properties, Clone, PartialEq)]
-pub struct Props {
-    #[prop_or_default]
-    pub class: String,
-    #[prop_or_default]
-    pub style: String,
-    #[prop_or_default]
-    pub children: Children,
 }
 
 impl Component for CardText {
@@ -32,28 +22,6 @@ impl Component for CardText {
     }
 
     fn view(&self) -> Html {
-        html! {
-            <p class=self.class() style=self.style()>
-                { self.props.children.render() }
-            </p>
-        }
-    }
-}
-
-impl CardText {
-    fn class(&self) -> String {
-        if self.props.class.is_empty() {
-            "card-text".into()
-        } else {
-            format!("card-text {}", self.props.class)
-        }
-    }
-
-    fn style(&self) -> &str {
-        if self.props.style.is_empty() {
-            ""
-        } else {
-            &self.props.style
-        }
+        render::render_with_prefix(&self.props, "card-text", render::p(&self.props.children))
     }
 }

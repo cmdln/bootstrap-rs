@@ -1,19 +1,28 @@
 mod group;
+mod props;
 mod textarea;
 
+use self::props::Props;
 pub use self::{group::InputGroup, textarea::TextArea};
-use crate::prelude::*;
+use crate::{prelude::*, render};
+use std::fmt::{Display, Formatter, Result as FmtResult};
 use yew::prelude::*;
 
 #[derive(Clone, PartialEq)]
 pub enum InputType {
     Text,
+    Date,
+    Checkbox,
+    Color,
 }
 
-impl InputType {
-    fn as_str(&self) -> &str {
+impl Display for InputType {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
         match self {
-            Self::Text => "text",
+            Self::Text => write!(f, "text"),
+            Self::Date => write!(f, "date"),
+            Self::Checkbox => write!(f, "checkbox"),
+            Self::Color => write!(f, "color"),
         }
     }
 }
@@ -26,38 +35,6 @@ pub struct Input {
 
 #[derive(Debug)]
 pub struct InputChange(ChangeData);
-
-#[derive(Properties, Clone, PartialEq)]
-pub struct Props {
-    #[prop_or_default]
-    pub name: String,
-    #[prop_or_default]
-    pub id: String,
-    pub on_change: Callback<String>,
-    pub input_type: InputType,
-    #[prop_or_default]
-    pub readonly: bool,
-    #[prop_or_default]
-    pub value: String,
-    #[prop_or_default]
-    pub border: Option<Border>,
-    #[prop_or_default]
-    pub borders: Vec<Border>,
-    #[prop_or_default]
-    pub margin: Option<Margin>,
-    #[prop_or_default]
-    pub margins: Vec<Margin>,
-    #[prop_or_default]
-    pub padding: Option<Padding>,
-    #[prop_or_default]
-    pub paddings: Vec<Padding>,
-    #[prop_or_default]
-    pub class: String,
-    #[prop_or_default]
-    pub style: String,
-    #[prop_or_default]
-    pub valid: Option<bool>,
-}
 
 impl Component for Input {
     type Message = InputChange;
@@ -86,40 +63,25 @@ impl Component for Input {
     }
 
     fn view(&self) -> Html {
-        let prefix = if self.props.readonly {
-            format!(
-                "form-control-plaintext{}",
-                valid_as_class(&self.props.valid)
-            )
+        let input_type = self
+            .props
+            .input_type
+            .as_ref()
+            .unwrap_or_else(|| &InputType::Text);
+        let mut prefix = if self.props.readonly {
+            vec!["form-control-plaintext"]
         } else {
-            format!("form-control{}", valid_as_class(&self.props.valid))
+            vec!["form-control"]
         };
-        let class = calculate_classes(prefix, (&self.props).into());
-        html! {
+        prefix.push(valid_as_class(&self.props.valid));
+        let html = html! {
             <input
-                name=&self.props.name
-                id=&self.props.id
-                type=self.props.input_type.as_str()
-                class=class
+                type=input_type
                 value=&self.state
                 readonly=self.props.readonly
                 onchange=self.link.callback(|evt| InputChange(evt))
             />
-        }
-    }
-}
-
-impl<'a> From<&'a Props> for BootstrapProps<'a> {
-    fn from(props: &Props) -> BootstrapProps {
-        let class = &props.class;
-        let borders = collect_bs(&props.border, &props.borders);
-        let margins = collect_bs(&props.margin, &props.margins);
-        let paddings = collect_bs(&props.padding, &props.paddings);
-        BootstrapProps {
-            class,
-            borders,
-            margins,
-            paddings,
-        }
+        };
+        render::render_with_prefix(&self.props, prefix, html)
     }
 }

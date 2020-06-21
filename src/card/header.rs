@@ -1,18 +1,8 @@
-use crate::prelude::*;
-use yew::{html::Children, prelude::*};
+use crate::{prelude::*, props::*, render};
+use yew::prelude::*;
 
 pub struct CardHeader {
     props: Props,
-}
-
-#[derive(Properties, Clone, PartialEq)]
-pub struct Props {
-    #[prop_or_default]
-    pub class: String,
-    #[prop_or_default]
-    pub style: String,
-    #[prop_or_default]
-    pub children: Children,
 }
 
 impl Component for CardHeader {
@@ -32,28 +22,26 @@ impl Component for CardHeader {
     }
 
     fn view(&self) -> Html {
-        html! {
-            <p class=self.class() style=self.style()>
-                { self.props.children.render() }
-            </p>
-        }
+        render::render_with_prefix(&self.props, "card-header", render::p(&self.props.children))
     }
 }
 
-impl CardHeader {
-    fn class(&self) -> String {
-        if self.props.class.is_empty() {
-            "card-header".into()
-        } else {
-            format!("card-header {}", self.props.class)
-        }
-    }
+#[cfg(test)]
+mod test {
+    use super::*;
 
-    fn style(&self) -> &str {
-        if self.props.style.is_empty() {
-            ""
-        } else {
-            &self.props.style
-        }
+    #[test]
+    fn test_comp() {
+        let comp = CardHeader {
+            props: Props::default(),
+        };
+
+        let expected = html! {
+            <p class="card-header">
+                <></>
+            </p>
+        };
+
+        assert_eq!(expected, comp.view());
     }
 }

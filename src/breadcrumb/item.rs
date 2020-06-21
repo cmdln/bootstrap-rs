@@ -1,13 +1,17 @@
-use crate::prelude::*;
+use crate::{prelude::*, props::*, render};
+use std::collections::HashMap;
 use yew::{html::Children, prelude::*};
 
 pub struct BreadcrumbItem {
     props: Props,
 }
 
-#[derive(Properties, Clone, PartialEq)]
+#[derive(Properties, Clone, PartialEq, Default)]
 pub struct Props {
+    // component specific
     pub active: bool,
+
+    // bootstrap specific
     #[prop_or_default]
     pub border: Option<Border>,
     #[prop_or_default]
@@ -20,10 +24,14 @@ pub struct Props {
     pub padding: Option<Padding>,
     #[prop_or_default]
     pub paddings: Vec<Padding>,
+
+    // html specific
     #[prop_or_default]
-    pub class: String,
+    pub id: Option<String>,
     #[prop_or_default]
-    pub style: String,
+    pub class: Classes,
+    #[prop_or_default]
+    pub style: Option<String>,
     #[prop_or_default]
     pub children: Children,
 }
@@ -45,43 +53,87 @@ impl Component for BreadcrumbItem {
     }
 
     fn view(&self) -> Html {
-        if self.props.active {
-            html! {
-                <li class=self.classes() aria-current="page">
-                    { self.props.children.render() }
-                </li>
-            }
+        let (prefix, html) = if self.props.active {
+            (
+                vec!["breadcrumb-item", "active"],
+                html! {
+                    <li class=self.classes() aria-current="page">
+                        { self.props.children.render() }
+                    </li>
+                },
+            )
         } else {
-            html! {
-                <li class=self.classes()>
-                    { self.props.children.render() }
-                </li>
-            }
-        }
+            (
+                vec!["breadcrumb-item"],
+                html! {
+                    <li class=self.classes()>
+                        { self.props.children.render() }
+                    </li>
+                },
+            )
+        };
+        render::render_with_prefix(&self.props, prefix, html)
     }
 }
 
 impl BreadcrumbItem {
-    fn classes(&self) -> String {
+    fn classes(&self) -> Classes {
+        let props: BootstrapProps<'_> = (&self.props).into();
+        let mut classes = props.calculate_classes("breadcrumb-item");
         if self.props.active {
-            calculate_classes("breadcrumb-item active", (&self.props).into())
-        } else {
-            calculate_classes("breadcrumb-item", (&self.props).into())
+            classes.push("active")
         }
+        classes
     }
 }
 
 impl<'a> From<&'a Props> for BootstrapProps<'a> {
     fn from(props: &Props) -> BootstrapProps {
         let class = &props.class;
-        let borders = collect_bs(&props.border, &props.borders);
-        let margins = collect_bs(&props.margin, &props.margins);
-        let paddings = collect_bs(&props.padding, &props.paddings);
+        let borders = collect_props(&props.border, &props.borders);
+        let margins = collect_props(&props.margin, &props.margins);
+        let paddings = collect_props(&props.padding, &props.paddings);
+        let mut attributes = HashMap::new();
+        if let Some(ref id) = props.id {
+            attributes.insert("id", id);
+        }
+        if let Some(ref style) = props.style {
+            attributes.insert("style", style);
+        }
         BootstrapProps {
             class,
             borders,
             margins,
             paddings,
+            attributes,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_active_prop() {
+        let item = BreadcrumbItem {
+            props: Props {
+                active: true,
+                id: Some("test".into()),
+                margin: Some(Margin(Edge::All, 3)),
+                padding: Some(Padding(Edge::Top, 3)),
+                ..Props::default()
+            },
+        };
+        let expected = html! {
+            <li
+                class="breadcrumb-item active m-3 pt-3"
+                aria-current="page"
+                id="test"
+            >
+                <></>
+            </li>
+        };
+        assert_eq!(expected, item.view());
     }
 }

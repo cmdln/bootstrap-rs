@@ -1,4 +1,4 @@
-use crate::prelude::*;
+use crate::{prelude::*, props::*, render};
 use yew::prelude::*;
 
 pub struct Container {
@@ -22,11 +22,7 @@ impl Component for Container {
     }
 
     fn view(&self) -> Html {
-        html! {
-            <div class=calculate_classes("container", (&self.props).into())>
-                { self.props.children.render() }
-            </div>
-        }
+        render::render_with_prefix(&self.props, "container", render::div(&self.props.children))
     }
 }
 

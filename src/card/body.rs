@@ -1,4 +1,4 @@
-use crate::prelude::*;
+use crate::{prelude::*, props::*, render};
 use yew::prelude::*;
 
 pub struct CardBody {
@@ -22,11 +22,29 @@ impl Component for CardBody {
     }
 
     fn view(&self) -> Html {
-        let class = calculate_classes("card-body", (&self.props).into());
-        html! {
-            <div class=class style=self.props.style.clone()>
-                { self.props.children.render() }
+        render::render_with_prefix(&self.props, "card-body", render::div(&self.props.children))
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_view() {
+        let comp = CardBody {
+            props: Props {
+                style: Some("display: none;".into()),
+                ..Props::default()
+            },
+        };
+
+        let expected = html! {
+            <div class="card-body" style="display: none;">
+                <></>
             </div>
-        }
+        };
+
+        assert_eq!(expected, comp.view());
     }
 }

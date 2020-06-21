@@ -1,4 +1,4 @@
-use crate::prelude::*;
+use crate::{prelude::*, props::*, render};
 use yew::prelude::*;
 
 pub struct InputGroup {
@@ -22,11 +22,10 @@ impl Component for InputGroup {
     }
 
     fn view(&self) -> Html {
-        let class = calculate_classes("input-group", (&self.props).into());
-        html! {
-            <div class=class>
-                { self.props.children.render() }
-            </div>
-        }
+        render::render_with_prefix(
+            &self.props,
+            "input-group",
+            render::div(&self.props.children),
+        )
     }
 }

@@ -1,4 +1,4 @@
-use crate::prelude::*;
+use crate::{prelude::*, props::*, render};
 use yew::prelude::*;
 
 pub struct FormGroup {
@@ -22,32 +22,6 @@ impl Component for FormGroup {
     }
 
     fn view(&self) -> Html {
-        html! {
-            <div class=calculate_classes("form-group", (&self.props).into())>
-            { self.props.children.render() }
-            </div>
-        }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test() {
-        let form_group = FormGroup {
-            props: Props {
-                margin: Some(Margin(Edge::All, 3)),
-                padding: Some(Padding(Edge::Top, 3)),
-                ..Props::default()
-            },
-        };
-        let expected = html! {
-            <div class="form-group m-3 pt-3">
-                <></>
-            </div>
-        };
-        assert_eq!(expected, form_group.view());
+        render::render_with_prefix(&self.props, "form-group", render::div(&self.props.children))
     }
 }

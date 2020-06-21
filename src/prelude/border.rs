@@ -1,8 +1,10 @@
 use super::{Color, Edge};
+use crate::props::IntoBsClass;
+
 #[derive(Clone, PartialEq)]
 pub struct Border(pub Edge, pub Color);
 
-impl super::BootstrapClass for Border {
+impl IntoBsClass for Border {
     fn as_classname(&self) -> String {
         let edge = match self.0 {
             Edge::All => "border".to_owned(),

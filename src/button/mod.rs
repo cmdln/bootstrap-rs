@@ -1,4 +1,4 @@
-use crate::prelude::*;
+use crate::{prelude::render_on_change, props::Props, render};
 use yew::prelude::*;
 
 pub struct ButtonGroup {
@@ -22,24 +22,6 @@ impl Component for ButtonGroup {
     }
 
     fn view(&self) -> Html {
-        html! {
-            <div class=self.class()
-                style=self.props.style.clone()
-                role=self.props.role.clone()
-                aria-label=self.props.aria_label.clone()
-            >
-                { self.props.children.render() }
-            </div>
-        }
-    }
-}
-
-impl ButtonGroup {
-    fn class(&self) -> String {
-        if self.props.class.is_empty() {
-            "btn-group".into()
-        } else {
-            format!("btn-group {}", self.props.class)
-        }
+        render::render_with_prefix(&self.props, "btn-group", render::div(&self.props.children))
     }
 }

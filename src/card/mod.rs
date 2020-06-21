@@ -3,7 +3,7 @@ mod header;
 mod text;
 
 pub use self::{body::CardBody, header::CardHeader, text::CardText};
-use crate::prelude::*;
+use crate::{prelude::*, props::*, render};
 use yew::prelude::*;
 
 pub struct Card {
@@ -27,11 +27,6 @@ impl Component for Card {
     }
 
     fn view(&self) -> Html {
-        let class = calculate_classes("card", (&self.props).into());
-        html! {
-            <div class=class style=self.props.style.clone()>
-                { self.props.children.render() }
-            </div>
-        }
+        render::render_with_prefix(&self.props, "card", render::div(&self.props.children))
     }
 }

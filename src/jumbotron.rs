@@ -1,4 +1,4 @@
-use crate::prelude::*;
+use crate::{props::Props, render};
 use yew::prelude::*;
 
 pub struct Jumbotron {
@@ -22,11 +22,11 @@ impl Component for Jumbotron {
     }
 
     fn view(&self) -> Html {
-        let class = calculate_classes("jumbotron", (&self.props).into());
-        html! {
-            <div class=class>
+        let html = html! {
+            <div>
                 { self.props.children.render() }
             </div>
-        }
+        };
+        render::render_with_prefix(&self.props, "jumbotron", html)
     }
 }

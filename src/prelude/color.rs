@@ -34,3 +34,13 @@ impl Color {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_with_prefix() {
+        assert_eq!(Color::Primary.with_prefix("alert"), "alert-primary");
+    }
+}

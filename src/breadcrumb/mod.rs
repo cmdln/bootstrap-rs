@@ -1,6 +1,6 @@
 mod item;
 
-use crate::prelude::*;
+use crate::{prelude::*, props::*, render};
 pub use item::BreadcrumbItem;
 use yew::prelude::*;
 
@@ -25,19 +25,13 @@ impl Component for Breadcrumb {
     }
 
     fn view(&self) -> Html {
-        let class = calculate_classes("breadcrumb", (&self.props).into());
-        html! {
-            <nav
-                class=class
-                aria-label="breadcrumb"
-                style=self.props.style.clone()
-            >
-                <ol
-                    class="breadcrumb"
-                >
+        let html = html! {
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
                     { self.props.children.render() }
                 </ol>
             </nav>
-        }
+        };
+        render::render_with_prefix(&self.props, "breadcrumb", html)
     }
 }
