@@ -12,6 +12,7 @@ use yew::prelude::*;
 pub enum InputType {
     Text,
     Date,
+    DateTime,
     Checkbox,
     Color,
 }
@@ -21,6 +22,7 @@ impl Display for InputType {
         match self {
             Self::Text => write!(f, "text"),
             Self::Date => write!(f, "date"),
+            Self::DateTime => write!(f, "datetime-local"),
             Self::Checkbox => write!(f, "checkbox"),
             Self::Color => write!(f, "color"),
         }
