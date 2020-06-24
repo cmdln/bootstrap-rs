@@ -1,7 +1,7 @@
 use super::InputType;
 use crate::{
     prelude::*,
-    props::{collect_props, BootstrapProps},
+    props::{add_opt_attr, collect_props, BootstrapProps},
 };
 use std::collections::HashMap;
 use yew::{html::Children, prelude::*};
@@ -43,6 +43,10 @@ pub struct Props {
     #[prop_or_default]
     pub style: Option<String>,
     #[prop_or_default]
+    pub aria_label: Option<String>,
+    #[prop_or_default]
+    pub aria_describedby: Option<String>,
+    #[prop_or_default]
     pub children: Children,
 }
 
@@ -53,15 +57,11 @@ impl<'a> From<&'a Props> for BootstrapProps<'a> {
         let margins = collect_props(&props.margin, &props.margins);
         let paddings = collect_props(&props.padding, &props.paddings);
         let mut attributes = HashMap::new();
-        if let Some(ref style) = props.style {
-            attributes.insert("style", style);
-        }
-        if let Some(ref id) = props.id {
-            attributes.insert("id", id);
-        }
-        if let Some(ref name) = props.name {
-            attributes.insert("name", name);
-        }
+        add_opt_attr(&mut attributes, "id", &props.id);
+        add_opt_attr(&mut attributes, "name", &props.name);
+        add_opt_attr(&mut attributes, "style", &props.style);
+        add_opt_attr(&mut attributes, "aria-label", &props.aria_label);
+        add_opt_attr(&mut attributes, "aria-describedby", &props.aria_describedby);
         BootstrapProps {
             class,
             borders,

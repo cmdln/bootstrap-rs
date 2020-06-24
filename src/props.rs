@@ -54,18 +54,10 @@ impl<'a> From<&'a Props> for BootstrapProps<'a> {
         let margins = collect_props(&props.margin, &props.margins);
         let paddings = collect_props(&props.padding, &props.paddings);
         let mut attributes = HashMap::new();
-        if let Some(ref id) = props.id {
-            attributes.insert("id", id);
-        }
-        if let Some(ref aria_label) = props.aria_label {
-            attributes.insert("aria-label", aria_label);
-        }
-        if let Some(ref role) = props.role {
-            attributes.insert("role", role);
-        }
-        if let Some(ref style) = props.style {
-            attributes.insert("style", style);
-        }
+        add_opt_attr(&mut attributes, "id", &props.id);
+        add_opt_attr(&mut attributes, "aria-label", &props.aria_label);
+        add_opt_attr(&mut attributes, "role", &props.role);
+        add_opt_attr(&mut attributes, "style", &props.style);
         BootstrapProps {
             class,
             borders,
@@ -119,6 +111,16 @@ fn into_classnames<C: IntoBsClass>(c: &[&C]) -> Classes {
     })
 }
 
+pub(crate) fn add_opt_attr<'a>(
+    attrs: &mut HashMap<&str, &'a String>,
+    name: &'static str,
+    opt: &'a Option<String>,
+) {
+    if let Some(val) = opt.as_ref() {
+        attrs.insert(name, val);
+    }
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -137,6 +139,23 @@ mod test {
         assert_eq!(
             expected,
             crate::render::render_with_prefix(&props, "", html! { <div aria-label="test" /> })
+        );
+    }
+
+    #[test]
+    fn test_opt_attr() {
+        let props = Props {
+            aria_label: Some("some-label".into()),
+            ..Props::default()
+        };
+
+        let expected = html! {
+            <div class="" aria-label="some-label" />
+        };
+
+        assert_eq!(
+            expected,
+            crate::render::render_with_prefix(&props, "", html! { <div /> })
         );
     }
 }
