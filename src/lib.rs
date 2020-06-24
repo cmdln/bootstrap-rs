@@ -13,7 +13,7 @@ mod render;
 pub use self::{
     alert::Alert,
     breadcrumb::{Breadcrumb, BreadcrumbItem},
-    button::ButtonGroup,
+    button::{Button, ButtonGroup, ButtonToolbar},
     card::{Card, CardBody, CardHeader, CardText},
     container::Container,
     form::FormGroup,
