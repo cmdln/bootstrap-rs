@@ -15,6 +15,7 @@ pub struct Props {
     pub value: String,
     #[prop_or_default]
     pub valid: Option<bool>,
+    #[prop_or_default]
     pub on_change: Callback<String>,
     #[prop_or_default]
     pub readonly: bool,
