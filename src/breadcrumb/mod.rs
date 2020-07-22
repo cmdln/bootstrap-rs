@@ -28,7 +28,7 @@ impl Component for Breadcrumb {
         let html = html! {
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    { self.props.children.render() }
+                    { self.props.children.clone() }
                 </ol>
             </nav>
         };

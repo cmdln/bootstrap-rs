@@ -56,18 +56,19 @@ fn extract_state(props: &Props) -> String {
     if props.children.is_empty() {
         props.value.clone()
     } else {
-        let node = props.children.render();
-        if let VNode::VText(text) = node {
-            text.text
-        } else if let VNode::VList(list) = node {
-            list.iter().fold(String::new(), |mut buf, node| {
-                if let VNode::VText(text) = node {
-                    buf.push_str(&text.text)
-                }
-                buf
-            })
-        } else {
-            props.value.clone()
-        }
+        props.children.iter().fold(String::new(), |mut buf, node| {
+            if let VNode::VText(text) = node {
+                buf.push_str(&text.text);
+            } else if let VNode::VList(list) = node {
+                let text = list.iter().fold(String::new(), |mut buf, node| {
+                    if let VNode::VText(text) = node {
+                        buf.push_str(&text.text)
+                    }
+                    buf
+                });
+                buf.push_str(&text);
+            }
+            buf
+        })
     }
 }

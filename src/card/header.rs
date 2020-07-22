@@ -38,7 +38,6 @@ mod test {
 
         let expected = html! {
             <p class="card-header">
-                <></>
             </p>
         };
 

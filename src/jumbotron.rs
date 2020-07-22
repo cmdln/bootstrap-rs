@@ -24,7 +24,7 @@ impl Component for Jumbotron {
     fn view(&self) -> Html {
         let html = html! {
             <div>
-                { self.props.children.render() }
+                { self.props.children.clone() }
             </div>
         };
         render::render_with_prefix(&self.props, "jumbotron", html)

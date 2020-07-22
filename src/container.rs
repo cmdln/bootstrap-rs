@@ -41,7 +41,6 @@ mod tests {
         };
         let expected = html! {
             <div class="container m-3 pt-3">
-                <></>
             </div>
         };
         assert_eq!(expected, container.view());

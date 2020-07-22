@@ -20,7 +20,7 @@ pub(crate) fn render_with_prefix<'a, B: Into<BootstrapProps<'a>>, C: Into<Classe
 pub(crate) fn div(children: &Children) -> Html {
     html! {
         <div>
-            { children.render() }
+            { for children.iter() }
         </div>
     }
 }
@@ -28,7 +28,7 @@ pub(crate) fn div(children: &Children) -> Html {
 pub(crate) fn p(children: &Children) -> Html {
     html! {
         <p>
-            { children.render() }
+            { for children.iter() }
         </p>
     }
 }

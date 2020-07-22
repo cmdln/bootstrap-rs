@@ -41,7 +41,6 @@ mod test {
 
         let expected = html! {
             <div class="card-body" style="display: none;">
-                <></>
             </div>
         };
 

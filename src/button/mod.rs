@@ -61,7 +61,7 @@ impl Component for Button {
                 onclick=self.link.callback(|_| ())
                 disabled=self.props.disabled.unwrap_or_default()
             >
-            { self.props.children.render() }
+            { self.props.children.clone() }
             </button>
         };
         render::render_with_prefix(&self.props, self.calculate_prefix(), html)

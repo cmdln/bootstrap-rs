@@ -29,7 +29,7 @@ impl Component for Alert {
     fn view(&self) -> Html {
         let html = html! {
             <div>
-                { self.props.children.render() }
+                { self.props.children.clone() }
                 <button
                     type="button"
                     class="close"

@@ -58,7 +58,7 @@ impl Component for BreadcrumbItem {
                 vec!["breadcrumb-item", "active"],
                 html! {
                     <li class=self.classes() aria-current="page">
-                        { self.props.children.render() }
+                        { self.props.children.clone() }
                     </li>
                 },
             )
@@ -67,7 +67,7 @@ impl Component for BreadcrumbItem {
                 vec!["breadcrumb-item"],
                 html! {
                     <li class=self.classes()>
-                        { self.props.children.render() }
+                        { self.props.children.clone() }
                     </li>
                 },
             )
@@ -131,7 +131,6 @@ mod tests {
                 aria-current="page"
                 id="test"
             >
-                <></>
             </li>
         };
         assert_eq!(expected, item.view());
