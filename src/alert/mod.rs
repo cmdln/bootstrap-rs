@@ -1,7 +1,11 @@
+mod bus;
 mod props;
+mod sub;
 
 use self::props::Props;
 use crate::{prelude::*, render};
+pub use bus::{Bus, Request};
+pub use sub::AlertSubscriber;
 use yew::prelude::*;
 
 pub struct Alert {
