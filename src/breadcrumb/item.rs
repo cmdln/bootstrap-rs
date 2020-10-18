@@ -49,7 +49,7 @@ impl Component for BreadcrumbItem {
     }
 
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
-        render_on_change(&mut self.props, props)
+        render_if_ne(&mut self.props, props)
     }
 
     fn view(&self) -> Html {

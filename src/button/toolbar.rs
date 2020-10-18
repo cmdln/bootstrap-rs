@@ -1,4 +1,4 @@
-use crate::{prelude::render_on_change, props::Props, render};
+use crate::{prelude::*, props::Props, render};
 use yew::prelude::*;
 
 pub struct ButtonToolbar {
@@ -18,7 +18,7 @@ impl Component for ButtonToolbar {
     }
 
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
-        render_on_change(&mut self.props, props)
+        render_if_ne(&mut self.props, props)
     }
 
     fn view(&self) -> Html {

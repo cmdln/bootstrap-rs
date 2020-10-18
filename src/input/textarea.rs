@@ -31,7 +31,7 @@ impl Component for TextArea {
     }
 
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
-        let should_render = render_on_change(&mut self.props, props);
+        let should_render = render_if_ne(&mut self.props, props);
         if should_render {
             self.state = extract_state(&self.props);
         }

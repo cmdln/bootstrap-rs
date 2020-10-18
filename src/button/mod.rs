@@ -4,7 +4,7 @@ mod toolbar;
 
 use self::props::Props;
 pub use self::{group::ButtonGroup, toolbar::ButtonToolbar};
-use crate::{prelude::render_on_change, render};
+use crate::{prelude::*, render};
 use std::fmt::{Display, Formatter, Result};
 use yew::prelude::*;
 
@@ -51,7 +51,7 @@ impl Component for Button {
     }
 
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
-        render_on_change(&mut self.props, props)
+        render_if_ne(&mut self.props, props)
     }
 
     fn view(&self) -> Html {

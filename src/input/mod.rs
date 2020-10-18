@@ -61,7 +61,7 @@ impl Component for Input {
         if self.props.value != props.value {
             self.state = props.value.clone();
         }
-        render_on_change(&mut self.props, props)
+        render_if_ne(&mut self.props, props)
     }
 
     fn view(&self) -> Html {
